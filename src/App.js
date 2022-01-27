@@ -4,32 +4,35 @@ import SearchBar from "./components/Searchbar/Searchbar";
 import { Message } from "./components/ImageGallery/ImageGallery.styled";
 import ImgApiService from "./services/api";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
-import { ButtonWrapper, LoadMoreButton } from "./components/Button/Button.styled";
+import {
+  ButtonWrapper,
+  LoadMoreButton,
+} from "./components/Button/Button.styled";
 import Spinner from "./components/Spinner/Spinner";
 import Modal from "./components/Modal/Modal";
 import { ModalCloseButton } from "./components/Modal/Modal.styled";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Status = {
   IDLE: "idle",
   PENDING: "pending",
   RESOLVED: "resolved",
-  REJECTED: "rejected",  
+  REJECTED: "rejected",
 };
 
 class App extends Component {
   state = {
-    request: '',
-    largeImgSrc: '',
+    request: "",
+    largeImgSrc: "",
     showModal: false,
     largeImgSrc: "",
     images: null,
     error: null,
     status: Status.IDLE,
   };
-  
- imgApiService = new ImgApiService(); 
+
+  imgApiService = new ImgApiService();
 
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevState.request;
@@ -64,7 +67,7 @@ class App extends Component {
       .catch((error) => this.setState({ error, status: Status.REJECTED }));
   };
 
-  handleFormSubmit = request => {
+  handleFormSubmit = (request) => {
     this.setState({ request });
   };
 
@@ -79,55 +82,54 @@ class App extends Component {
     this.setState({ largeImgSrc: largeImageURL });
   };
 
- 
-  
   render() {
     const { images, error, status } = this.state;
     const { request } = this.props;
 
-      return (
-        <Container>
-          <SearchBar onSubmit={this.handleFormSubmit} />
-          {status === "idle" && (<Message>Please enter your query</Message>)}
-          {status === "pending" && (<Spinner/>)}
-          {status === "resolved" && (
-            <div>
+    return (
+      <Container>
+        <SearchBar onSubmit={this.handleFormSubmit} />
+        {status === "idle" && <Message>Please enter your query</Message>}
+        {status === "pending" && <Spinner />}
+        {status === "resolved" && (
+          <div>
             <ImageGallery images={images} onClick={this.onImgClick} />
-          {images.length > 0 && images.length % 12 === 0 && (
-            <ButtonWrapper>
-              <LoadMoreButton type="button" onClick={this.onLoadClick}>
-                Load more
-              </LoadMoreButton>
-                </ButtonWrapper>
-                
-              )}
-              </div>
-          )}
-          
-          {this.state.showModal && (
-            <Modal onClose={this.toggleModal}>
-              <img
-                src={this.state.largeImgSrc}
-                alt=""
-                width="100%"
-                height="100%"
-              />
-              <ModalCloseButton onClick={this.toggleModal}>Close Modal</ModalCloseButton>
-            </Modal>
-          )}
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
-        </Container>
-      );
+            {images.length > 0 && images.length % 12 === 0 && (
+              <ButtonWrapper>
+                <LoadMoreButton type="button" onClick={this.onLoadClick}>
+                  Load more
+                </LoadMoreButton>
+              </ButtonWrapper>
+            )}
+          </div>
+        )}
+
+        {this.state.showModal && (
+          <Modal onClose={this.toggleModal}>
+            <img
+              src={this.state.largeImgSrc}
+              alt=""
+              width="100%"
+              height="100%"
+            />
+            <ModalCloseButton onClick={this.toggleModal}>
+              Close Modal
+            </ModalCloseButton>
+          </Modal>
+        )}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </Container>
+    );
   }
 }
 export default App;
